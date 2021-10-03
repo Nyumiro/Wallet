@@ -19,19 +19,21 @@ def currency_validation():
 def delta_balance_validation():
     delta_balance = input()
     try:
-       return int(delta_balance) if int(delta_balance) > 0 else delta_balance_validation()
+        return int(delta_balance) if int(delta_balance) > 0 else delta_balance_validation()
     except Exception:
         print('Недопустимый ввод. Пожалуйста, введите сумму, используя цифры.')
         return delta_balance_validation()
 
 
+currencies_collection = {'RUB/EUR': 1 / 82,
+                         'RUB/USD': 72,
+                         'EUR/RUB': 82,
+                         'EUR/USD': 1.16,
+                         'USD/RUB': 1 / 72,
+                         'USD/EUR': 1 / 1.16}
+
+
 def currency_converter(delta_balance, sender, receptionist):
-    currencies_collection = {'RUB/EUR': (lambda exchange_rates=82: delta_balance * exchange_rates)(),
-                             'RUB/USD': (lambda exchange_rates=72: delta_balance * exchange_rates)(),
-                             'EUR/RUB': (lambda exchange_rates=82: delta_balance / exchange_rates)(),
-                             'EUR/USD': (lambda exchange_rates=1.16: delta_balance / exchange_rates)(),
-                             'USD/RUB': (lambda exchange_rates=72: delta_balance / exchange_rates)(),
-                             'USD/EUR': (lambda exchange_rates=1.16: delta_balance * exchange_rates)()}
-
-    return delta_balance if sender.currency == receptionist.currency else currencies_collection[sender.currency+'/'+receptionist.currency]
-
+    diff_delta_balance = (lambda rate: delta_balance * rate)
+    return delta_balance if sender.currency == receptionist.currency else diff_delta_balance(
+        currencies_collection[sender.currency + '/' + receptionist.currency])

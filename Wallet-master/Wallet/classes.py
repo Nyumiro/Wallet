@@ -1,11 +1,12 @@
 class HistoryItem:
-    def __init__(self, owner_id, type_of_operation, delta_balance, currency, recipient_id, owner_new_balance):
+    def __init__(self, owner_id, type_of_operation, delta_balance, currency, recipient_id, owner_new_balance, datetime):
         self.owner_id = owner_id
         self.type_of_operation = type_of_operation
         self.delta_balance = delta_balance
         self.currency = currency
         self.recipient_id = recipient_id
         self.owner_new_balance = owner_new_balance
+        self.datetime = datetime
 
 
 class Wallet:
