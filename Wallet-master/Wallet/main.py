@@ -8,24 +8,25 @@ wallets = read_wallets()  # считываем созданные кошельк
 history = read_history()  # считываем историю из файла history.csv
 
 while True:
-    print('Введите команду. Введите HELP для вывода всех команд. Для завершения работы программы введите команду EXIT.')
+    print('Введите команду. Введите HELP для вывода всех команд. '
+          'Для завершения работы программы введите команду EXIT. ')
 
     command = input()
 
     if command == 'HELP':
-        print('CREATE -- После ввода данной команды открывается возможность создания нового счёта.\n'
-              'BLOCK_WALLET -- Данная операция позволяет изменить состояние существующего счёта. \n'
-              'SHOW-WALLET -- Данная команда показывает всю информацию о существующем счёте.\n'
-              'SHOW_ALL_WALLETS -- Данная команда выводит все созданные счета. \n'
-              'MONEY_OUT -- Данная команда позволяет вывести деньги с существующего счёта. \n'
-              'MONEY_ADD -- Данная команда позволяет пополнить существующий счет на указанную сумму. \n'
-              'TRANSACT -- Данная команда позволяет переводить деньги между существующими счетами. '
+        print('CREATE -- После ввода данной команды открывается возможность создания нового кошелька.\n'
+              'BLOCK_WALLET -- Данная операция позволяет заблокировать/разблокировать существующего кошелька. \n'
+              'SHOW-WALLET -- Данная команда показывает всю информацию о существующем кошельке.\n'
+              'SHOW_ALL_WALLETS -- Данная команда выводит все созданные кошельки. \n'
+              'MONEY_OUT -- Данная команда позволяет вывести деньги с существующего кошелька. \n'
+              'MONEY_ADD -- Данная команда позволяет пополнить существующий кошелек на указанную сумму. \n'
+              'TRANSACT -- Данная команда позволяет переводить деньги между существующими кошельками. '
               'Если кошельки используют разные валюты, то сумма, введенная отправителем, конвертируется в валюту получателя.\n'
-              'SHOW_ALL_HISTORY -- Данная команда показывает всю историю операций.\n\n'
-              'EXIT -- Данная команда завершает работу программы.')
+              'SHOW_HISTORY -- Данная команда показывает всю историю операций.\n'
+              'EXIT -- Данная команда завершает работу программы. Эта команда сохраняет историю.\n\n')
         continue
 
-    if command == 'CREATE':
+    elif command == 'CREATE':
         print('Запущена программа создания кошелька.')
         owner_name = input('Введите имя владельца кошелька: ')
         owner_lastname = input('Введите фамилию владельца кошелька: ')
@@ -38,7 +39,7 @@ while True:
         print(f'Кошелек создан. Кошельку присвоен номер: {owner_id} \n\n')
         continue
 
-    if command == 'BLOCK_WALLET':
+    elif command == 'BLOCK_WALLET':
         id = int(input('Введена команда блокировки/разблокировки кошелька. Введите номер счёта: '))
         if id not in wallets.keys():
             print('Недопустимая операция. Указанный кошелек не найден.\n\n')
@@ -49,7 +50,7 @@ while True:
               f'Состояние номера счета {wallet.owner_id}: {"заблокирован" if wallet.is_blocked else "разблокирован"}.\n\n')
         continue
 
-    if command == 'SHOW_WALLET':
+    elif command == 'SHOW_WALLET':
         id = int(input('Запущена программа вывода информации о кошельке. Введите номер кошелька: '))
         if id not in wallets.keys():
             print('Недопустимая операция. Указанный кошелёк не найден.\n\n')
@@ -58,13 +59,12 @@ while True:
         wallet.show_info()
         continue
 
-    if command == 'SHOW_ALL_WALLETS':
-        print('Запущена программа, показывающая все созданные кошельки.\n\n')
+    elif command == 'SHOW_ALL_WALLETS':
         for wallet in wallets:
             wallets[wallet].show_info()
         continue
 
-    if command == 'MONEY_OUT':
+    elif command == 'MONEY_OUT':
         id = int(input('Запущена программа вывода денег. Введите номер счета: '))
         if id not in wallets.keys():
             print('Недопустимая операция. Указанный кошелёк не найден.\n\n')
@@ -86,7 +86,7 @@ while True:
               f'Текущий баланс счета: {wallet.balance} {wallet.currency}.\n\n')
         continue
 
-    if command == 'MONEY_ADD':
+    elif command == 'MONEY_ADD':
         id = int(input('Запущена программа пополнения средств. Введите номер кошелька: '))
         if id not in wallets.keys():
             print('Недопустимая операция. Указанный кошелёк не найден.\n\n')
@@ -105,7 +105,7 @@ while True:
               f'Текущий баланс счета: {wallet.balance} {wallet.currency}.\n\n')
         continue
 
-    if command == 'TRANSACT':
+    elif command == 'TRANSACT':
         id_sender = int(input('Введена команда перевода между кошельками. Введите номер кошелька отправителя: '))
         if id_sender not in wallets.keys():
             print('Недопустимая операция. Кошелёк отправителя не найден.\n\n')
@@ -143,12 +143,21 @@ while True:
                                    wallet_sender.owner_id, wallet_recipient.balance, str(datetime.now())))
         continue
 
-    if command == 'SHOW_HISTORY':
+    elif command == 'SHOW_HISTORY':
         for i in range(len(history)):
             print(f'Операция: {i+1} {history[i].owner_id, history[i].type_of_operation, history[i].delta_balance, history[i].currency, history[i].recipient_id, history[i].owner_new_balance, history[i].datetime}. \n')
         continue
 
-    if command == 'EXIT':
+    elif command == 'SHOW_HISTORY_FILTER':
+        filter_history = input('Введите тип операции, который хотите отобразить (MONEY_ADD, MONEY_OUT, TRANSACT): ')
+        if filter_history not in ['MONEY_OUT', 'MONEY_ADD', 'TRANSACT']:
+            print('Неизвестная операция.')
+            continue
+        for i in history:
+            if i.type_of_operation == filter_history:
+                print(f'Операция: {i.owner_id, i.type_of_operation,i.delta_balance, i.currency, i.recipient_id, i.owner_new_balance, i.datetime}. \n')
+        continue
+    elif command == 'EXIT':
         print('Завершение работы.')
         write_wallets(wallets)
         write_history(history)
